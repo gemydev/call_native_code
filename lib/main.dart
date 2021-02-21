@@ -27,9 +27,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   static const channel = MethodChannel("CallNativeCode/Kotlin");
+
   playMusic() async {
     try {
       await channel.invokeMethod("playMusic");
+    } on PlatformException catch (ex) {
+      print(ex.message);
+    }
+  }
+
+  stopMusic() async {
+    try {
+      await channel.invokeMethod("stopMusic");
     } on PlatformException catch (ex) {
       print(ex.message);
     }
@@ -40,17 +49,24 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Call Native Code"),
+        centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'PlayMusic',
-            ),
-            RaisedButton(child: Text("Play"), onPressed: playMusic),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            'Music Player',
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              RaisedButton(child: Text("Play"), onPressed: playMusic),
+              RaisedButton(child: Text("Stop"), onPressed: stopMusic),
+            ],
+          ),
+        ],
       ),
     );
   }

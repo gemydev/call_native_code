@@ -1,5 +1,6 @@
 package com.example.call_native_code
 
+import android.content.Intent
 import android.media.MediaPlayer
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -13,10 +14,14 @@ class MainActivity : FlutterActivity() {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, channel).setMethodCallHandler { call, result ->
             if (call.method == "playMusic") {
-                val player = MediaPlayer.create(this, Settings.System.DEFAULT_RINGTONE_URI) as MediaPlayer
-                player.setLooping(true)
-                player.start()
-            } else {
+                Intent(this,MusicService:: class.java).also { intent ->  
+                    startService(intent)
+                }
+            } else if (call.method == "stopMusic") {
+            Intent(this,MusicService:: class.java).also { intent ->
+                stopService(intent)
+            }
+        }else {
                 result.notImplemented()
             }
         };
